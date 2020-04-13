@@ -30,6 +30,7 @@ from onnx_tf.common.handler_helper import get_all_backend_handlers
 from onnx_tf.pb_wrapper import OnnxNode
 import onnx_tf.common as common
 
+import numpy as np
 
 class TensorflowBackend(Backend):
   """ Tensorflow Backend for ONNX
@@ -211,9 +212,10 @@ class TensorflowBackend(Backend):
       return name.replace(
           ":", "_tf_") + "_" + get_unique_suffix() if ":" in name else name
 
+    print("working!")
     return [(init.name,
-             tf.constant(
-                 tensor2list(init),
+             tf.Variable(
+                 np.array(tensor2list(init)).reshape(init.dims),
                  shape=init.dims,
                  dtype=data_type.onnx2tf(init.data_type),
                  name=validate_initializer_name(init.name)))
