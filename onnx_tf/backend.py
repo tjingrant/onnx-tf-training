@@ -212,7 +212,6 @@ class TensorflowBackend(Backend):
       return name.replace(
           ":", "_tf_") + "_" + get_unique_suffix() if ":" in name else name
 
-    print("working!")
     return [(init.name,
              tf.Variable(
                  np.array(tensor2list(init)).reshape(init.dims),
