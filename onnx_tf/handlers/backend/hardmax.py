@@ -1,6 +1,6 @@
 import numpy as np
 import tensorflow as tf
-import tensorflow_addons as tfa
+#import tensorflow_addons as tfa
 
 from onnx_tf.handlers.backend_handler import BackendHandler
 from onnx_tf.handlers.handler import onnx_op
@@ -8,7 +8,7 @@ from onnx_tf.handlers.handler import tf_func
 
 
 @onnx_op("Hardmax")
-@tf_func(tfa.seq2seq.hardmax)
+#@tf_func(tfa.seq2seq.hardmax)
 class Hardmax(BackendHandler):
 
   @classmethod

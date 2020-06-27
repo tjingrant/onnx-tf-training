@@ -38,14 +38,17 @@ class BatchNormalization(BackendHandler):
     running_variance = tf.reshape(tensor_dict[node.inputs[4]],
                                   params_shape_broadcast)
 
+    axis = [0]
+    mean, variance = tf.nn.moments(x, axis)
+    return [tf.nn.batch_normalization(x, mean, variance, bias, scale, 1e-5)]
+    node.attrs["training"] = True
     # from version 7, force to use test mode
     if cls.SINCE_VERSION >= 7 or node.attrs.get("is_test", 0):
       inputs = [x, running_mean, running_variance, bias, scale]
       return [cls.make_tensor_from_onnx_node(node, inputs=inputs)]
     spatial = node.attrs.get("spatial", 1) == 1
     momentum = node.attrs.get("momentum", 0.9)
-    axis = [0] if spatial else [0] + list(range(2, total_num_dim))
-    mean, variance = tf.nn.moments(x, axis)
+    
     running_mean = running_mean * momentum + mean * (1 - momentum)
     running_variance = running_variance * momentum + variance * (1 - momentum)
     # TODO: need to conform to the documentation here
